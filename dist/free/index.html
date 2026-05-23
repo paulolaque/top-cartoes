@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Top Cartões</title>
+    <link rel="preload" href="./data/cards.json" as="fetch" crossorigin="anonymous" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="workspace" aria-labelledby="app-title">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Top Cartões</p>
+            <h1 id="app-title">Simulador de lucro por cartão</h1>
+          </div>
+          <label class="switch">
+            <input id="premiumMode" type="checkbox" />
+            <span>Premium</span>
+          </label>
+        </header>
+
+        <form class="controls" id="simulatorForm">
+          <fieldset>
+            <legend>Perfil</legend>
+            <label>
+              <span>Gasto mensal no cartão</span>
+              <input id="monthlySpend" class="currency-input" inputmode="decimal" type="text" value="3.000" data-min="0" />
+              <small class="field-error" id="monthlySpendError"></small>
+            </label>
+            <label>
+              <span>Renda mensal</span>
+              <input id="income" class="currency-input" inputmode="decimal" type="text" placeholder="0" data-min="0" />
+              <small class="field-error" id="incomeError"></small>
+            </label>
+            <label>
+              <span>Investimento</span>
+              <input id="investment" class="currency-input" inputmode="decimal" type="text" placeholder="0" data-min="0" />
+              <small class="field-error" id="investmentError"></small>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Milhas</legend>
+            <label>
+              <span>Bônus de transferência</span>
+              <input id="transferBonus" type="range" min="0" max="150" step="5" value="0" />
+              <output id="transferBonusOut">0%</output>
+            </label>
+            <label>
+              <span>Preço do milheiro</span>
+              <input id="milePrice" class="currency-input" inputmode="decimal" type="text" value="20" data-min="0" />
+              <small class="field-error" id="milePriceError"></small>
+            </label>
+            <label>
+              <span>Dólar</span>
+              <input id="dollar" class="decimal-input" inputmode="decimal" type="text" value="5,03" data-min="1" />
+              <small class="field-error" id="dollarError"></small>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Filtros</legend>
+            <label>
+              <span>Acessos a sala VIP por ano</span>
+              <select id="vipFilter">
+                <option value="0">Qualquer</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="4">4+</option>
+                <option value="6">6+</option>
+                <option value="10000">Ilimitado</option>
+              </select>
+            </label>
+            <label>
+              <span>Cartão</span>
+              <select id="cardFilter">
+                <option value="">Todos</option>
+              </select>
+            </label>
+            <label>
+              <span>Elegibilidade</span>
+              <select id="eligibilityFilter">
+                <option value="eligible">Elegíveis</option>
+              </select>
+            </label>
+            <label>
+              <span>Investimento mínimo até</span>
+              <input id="maxInvestmentMinimum" class="currency-input" inputmode="decimal" type="text" placeholder="Sem limite" data-min="0" />
+              <small class="field-error" id="maxInvestmentMinimumError"></small>
+            </label>
+            <label>
+              <span>Renda mínima até</span>
+              <input id="maxIncomeMinimum" class="currency-input" inputmode="decimal" type="text" placeholder="Sem limite" data-min="0" />
+              <small class="field-error" id="maxIncomeMinimumError"></small>
+            </label>
+            <label>
+              <span>Anuidade até</span>
+              <input id="maxAnnualFee" class="currency-input" inputmode="decimal" type="text" placeholder="Sem limite" data-min="0" />
+              <small class="field-error" id="maxAnnualFeeError"></small>
+            </label>
+            <label>
+              <span>Banco</span>
+              <select id="bankFilter">
+                <option value="">Todos</option>
+              </select>
+            </label>
+            <label>
+              <span>Bandeira</span>
+              <select id="brandFilter">
+                <option value="">Todas</option>
+              </select>
+            </label>
+          </fieldset>
+        </form>
+
+        <section class="summary" aria-live="polite">
+          <div>
+            <p>Seu melhor cenário rende até</p>
+            <strong id="bestProfit">R$ ... por ano</strong>
+          </div>
+          <div>
+            <p>Há</p>
+            <strong id="cardCount">0 cartões elegíveis para seu perfil</strong>
+          </div>
+          <div>
+            <p>O melhor cartão do seu perfil é da categoria</p>
+            <strong id="bestCard">...</strong>
+          </div>
+          <div>
+            <p>O ganho entre o melhor e um cartão mediano pode passar de</p>
+            <strong id="comparisonGain">R$ ... por ano</strong>
+          </div>
+        </section>
+
+        <section class="result-panel">
+          <div class="table-head">
+            <h2>Ranking</h2>
+            <p id="resultNote">Atualizando...</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr id="resultsHeader">
+                  <th>#</th>
+                  <th>Cartão</th>
+                  <th>Lucro anual</th>
+                  <th>Cashback</th>
+                  <th>Milhas</th>
+                  <th>Anuidade efetiva</th>
+                  <th>VIP</th>
+                </tr>
+              </thead>
+              <tbody id="resultsBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
