@@ -23,6 +23,10 @@ const els = {
   vipFilter: document.getElementById("vipFilter"),
   cardFilter: document.getElementById("cardFilter"),
   eligibilityFilter: document.getElementById("eligibilityFilter"),
+  maxInvestmentMinimum: document.getElementById("maxInvestmentMinimum"),
+  maxInvestmentMinimumError: document.getElementById("maxInvestmentMinimumError"),
+  maxIncomeMinimum: document.getElementById("maxIncomeMinimum"),
+  maxIncomeMinimumError: document.getElementById("maxIncomeMinimumError"),
   maxAnnualFee: document.getElementById("maxAnnualFee"),
   maxAnnualFeeError: document.getElementById("maxAnnualFeeError"),
   bankFilter: document.getElementById("bankFilter"),
@@ -31,6 +35,7 @@ const els = {
   bestProfit: document.getElementById("bestProfit"),
   bestCard: document.getElementById("bestCard"),
   cardCount: document.getElementById("cardCount"),
+  comparisonGain: document.getElementById("comparisonGain"),
   resultNote: document.getElementById("resultNote"),
   resultsHeader: document.getElementById("resultsHeader"),
   resultsBody: document.getElementById("resultsBody"),
@@ -137,6 +142,8 @@ function validateForm() {
     setFieldValidity(els.investment, els.investmentError),
     setFieldValidity(els.milePrice, els.milePriceError),
     setFieldValidity(els.dollar, els.dollarError),
+    setFieldValidity(els.maxInvestmentMinimum, els.maxInvestmentMinimumError),
+    setFieldValidity(els.maxIncomeMinimum, els.maxIncomeMinimumError),
     setFieldValidity(els.maxAnnualFee, els.maxAnnualFeeError),
   ];
   return checks.every(Boolean);
@@ -193,6 +200,20 @@ function finite(value) {
   return Number.isFinite(value) ? value : 0;
 }
 
+function bestCategoryText(card) {
+  const tier = String(card?.tier || "").trim();
+  if (tier) return tier;
+  if (!state.premium) return "Black/Infinite";
+  return "Categoria não informada";
+}
+
+function medianProfit(results) {
+  if (!results.length) return 0;
+  const middle = Math.floor(results.length / 2);
+  if (results.length % 2) return finite(results[middle].profit);
+  return (finite(results[middle - 1].profit) + finite(results[middle].profit)) / 2;
+}
+
 function getInputs() {
   return {
     monthlySpend: toNumber(els.monthlySpend),
@@ -204,6 +225,8 @@ function getInputs() {
     vipMinimum: Number(els.vipFilter.value),
     cardId: els.cardFilter.value,
     eligibility: els.eligibilityFilter.value,
+    maxInvestmentMinimum: toNumber(els.maxInvestmentMinimum),
+    maxIncomeMinimum: toNumber(els.maxIncomeMinimum),
     maxAnnualFee: toNumber(els.maxAnnualFee),
     bank: els.bankFilter.value,
     brand: els.brandFilter.value,
@@ -240,8 +263,9 @@ function evaluateCard(card, input) {
   const miles = annualSpend * milesPerReal * (1 + input.transferBonus);
   const milesValue = (miles / 1000) * input.milePrice;
   const cashbackValue = annualSpend * finite(card.cashback);
+  const rewardValue = Math.max(milesValue, cashbackValue);
   const annualFee = effectiveAnnualFee(card, input);
-  const profit = milesValue + cashbackValue - annualFee;
+  const profit = rewardValue - annualFee;
 
   return {
     ...card,
@@ -250,6 +274,7 @@ function evaluateCard(card, input) {
     miles,
     milesValue,
     cashbackValue,
+    rewardValue,
     profit,
   };
 }
@@ -258,6 +283,8 @@ function passesFilters(result, input) {
   if (input.cardId && String(result.id) !== input.cardId) return false;
   if (input.bank && result.bank !== input.bank) return false;
   if (input.brand && result.brand !== input.brand) return false;
+  if (input.maxInvestmentMinimum && result.investmentMinimum > input.maxInvestmentMinimum) return false;
+  if (input.maxIncomeMinimum && result.incomeMinimum > input.maxIncomeMinimum) return false;
   if (input.maxAnnualFee && result.annualFee > input.maxAnnualFee) return false;
   if (input.vipMinimum >= 10000 && result.vipAccess < 10000) return false;
   if (input.vipMinimum > 0 && input.vipMinimum < 10000 && result.vipAccess < input.vipMinimum) return false;
@@ -300,9 +327,10 @@ function renderRows(results) {
 function recalculate() {
   state.pendingFrame = 0;
   if (!validateForm()) {
-    els.bestProfit.textContent = "...";
+    els.bestProfit.textContent = "R$ ... por ano";
     els.bestCard.textContent = "...";
-    els.cardCount.textContent = "0";
+    els.cardCount.textContent = "0 cartões elegíveis para seu perfil";
+    els.comparisonGain.textContent = "R$ ... por ano";
     els.resultNote.textContent = "Corrija os campos destacados";
     els.resultsBody.replaceChildren();
     return;
@@ -319,15 +347,21 @@ function recalculate() {
   els.cardCount.textContent = formatNumber(results.length);
 
   if (!best) {
-    els.bestProfit.textContent = "...";
+    els.bestProfit.textContent = "R$ ... por ano";
     els.bestCard.textContent = "...";
+    els.cardCount.textContent = "0 cartões elegíveis para seu perfil";
+    els.comparisonGain.textContent = "R$ ... por ano";
     els.resultNote.textContent = "Nenhum cartão encontrado";
     els.resultsBody.replaceChildren();
     return;
   }
 
-  els.bestProfit.textContent = formatMoney(best.profit);
-  els.bestCard.textContent = maskName(best.name);
+  const gapToMedian = Math.max(finite(best.profit) - medianProfit(results), 0);
+
+  els.bestProfit.textContent = `${formatMoney(best.profit)} por ano`;
+  els.bestCard.textContent = bestCategoryText(best);
+  els.cardCount.textContent = `${formatNumber(results.length)} cartão${results.length === 1 ? "" : "es"} elegíve${results.length === 1 ? "l" : "is"} para seu perfil`;
+  els.comparisonGain.textContent = `${formatMoney(gapToMedian)} por ano`;
   els.resultNote.textContent = `${results.length} resultado${results.length === 1 ? "" : "s"}`;
   renderRows(results);
 }
@@ -399,7 +433,7 @@ async function boot() {
 
 els.form.addEventListener("input", scheduleRecalculate);
 els.form.addEventListener("change", scheduleRecalculate);
-for (const input of [els.monthlySpend, els.income, els.investment, els.maxAnnualFee]) {
+for (const input of [els.monthlySpend, els.income, els.investment, els.maxInvestmentMinimum, els.maxIncomeMinimum, els.maxAnnualFee]) {
   input.addEventListener("input", () => {
     formatWhileTyping(input, 0);
   });
@@ -435,5 +469,8 @@ els.premiumMode.addEventListener("change", () => {
 
 boot().catch((error) => {
   els.resultNote.textContent = error.message;
-  els.bestProfit.textContent = "...";
+  els.bestProfit.textContent = "R$ ... por ano";
+  els.bestCard.textContent = "...";
+  els.cardCount.textContent = "0 cartões elegíveis para seu perfil";
+  els.comparisonGain.textContent = "R$ ... por ano";
 });

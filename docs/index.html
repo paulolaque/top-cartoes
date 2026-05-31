@@ -86,31 +86,28 @@
                 <option value="eligible">Elegíveis</option>
               </select>
             </label>
-            <!-- filtros de investimento e renda removidos: agora calculados a partir de Investimento e Renda mensal -->
-            <label class="premium-only">
-              <span>Cartão</span>
-              <select id="cardFilter">
-                <option value="">Todos</option>
-              </select>
+            <label>
+              <span>Investimento mínimo até</span>
+              <input id="maxInvestmentMinimum" class="currency-input" inputmode="decimal" type="text" placeholder="Sem limite" data-min="0" />
+              <small class="field-error" id="maxInvestmentMinimumError"></small>
             </label>
-            <label class="premium-only">
-              <span>Elegibilidade</span>
-              <select id="eligibilityFilter">
-                <option value="eligible">Elegíveis</option>
-              </select>
+            <label>
+              <span>Renda mínima até</span>
+              <input id="maxIncomeMinimum" class="currency-input" inputmode="decimal" type="text" placeholder="Sem limite" data-min="0" />
+              <small class="field-error" id="maxIncomeMinimumError"></small>
             </label>
-            <label class="premium-only">
+            <label>
               <span>Anuidade até</span>
               <input id="maxAnnualFee" class="currency-input" inputmode="decimal" type="text" placeholder="Sem limite" data-min="0" />
               <small class="field-error" id="maxAnnualFeeError"></small>
             </label>
-            <label class="premium-only">
+            <label>
               <span>Banco</span>
               <select id="bankFilter">
                 <option value="">Todos</option>
               </select>
             </label>
-            <label class="premium-only">
+            <label>
               <span>Bandeira</span>
               <select id="brandFilter">
                 <option value="">Todas</option>
@@ -121,16 +118,20 @@
 
         <section class="summary" aria-live="polite">
           <div>
-            <p>Melhor lucro anual</p>
-            <strong id="bestProfit">...</strong>
+            <p>Seu melhor cenário rende até</p>
+            <strong id="bestProfit">R$ ... por ano</strong>
           </div>
           <div>
-            <p>Melhor cartão</p>
+            <p>Há</p>
+            <strong id="cardCount">0 cartões elegíveis para seu perfil</strong>
+          </div>
+          <div>
+            <p>O melhor cartão do seu perfil é da categoria</p>
             <strong id="bestCard">...</strong>
           </div>
           <div>
-            <p>Cartões avaliados</p>
-            <strong id="cardCount">0</strong>
+            <p>O ganho entre o melhor e um cartão mediano pode passar de</p>
+            <strong id="comparisonGain">R$ ... por ano</strong>
           </div>
         </section>
 
