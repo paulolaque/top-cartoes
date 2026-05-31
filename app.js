@@ -23,10 +23,6 @@ const els = {
   vipFilter: document.getElementById("vipFilter"),
   cardFilter: document.getElementById("cardFilter"),
   eligibilityFilter: document.getElementById("eligibilityFilter"),
-  maxInvestmentMinimum: document.getElementById("maxInvestmentMinimum"),
-  maxInvestmentMinimumError: document.getElementById("maxInvestmentMinimumError"),
-  maxIncomeMinimum: document.getElementById("maxIncomeMinimum"),
-  maxIncomeMinimumError: document.getElementById("maxIncomeMinimumError"),
   maxAnnualFee: document.getElementById("maxAnnualFee"),
   maxAnnualFeeError: document.getElementById("maxAnnualFeeError"),
   bankFilter: document.getElementById("bankFilter"),
@@ -141,8 +137,6 @@ function validateForm() {
     setFieldValidity(els.investment, els.investmentError),
     setFieldValidity(els.milePrice, els.milePriceError),
     setFieldValidity(els.dollar, els.dollarError),
-    setFieldValidity(els.maxInvestmentMinimum, els.maxInvestmentMinimumError),
-    setFieldValidity(els.maxIncomeMinimum, els.maxIncomeMinimumError),
     setFieldValidity(els.maxAnnualFee, els.maxAnnualFeeError),
   ];
   return checks.every(Boolean);
@@ -210,8 +204,6 @@ function getInputs() {
     vipMinimum: Number(els.vipFilter.value),
     cardId: els.cardFilter.value,
     eligibility: els.eligibilityFilter.value,
-    maxInvestmentMinimum: toNumber(els.maxInvestmentMinimum),
-    maxIncomeMinimum: toNumber(els.maxIncomeMinimum),
     maxAnnualFee: toNumber(els.maxAnnualFee),
     bank: els.bankFilter.value,
     brand: els.brandFilter.value,
@@ -266,8 +258,6 @@ function passesFilters(result, input) {
   if (input.cardId && String(result.id) !== input.cardId) return false;
   if (input.bank && result.bank !== input.bank) return false;
   if (input.brand && result.brand !== input.brand) return false;
-  if (input.maxInvestmentMinimum && result.investmentMinimum > input.maxInvestmentMinimum) return false;
-  if (input.maxIncomeMinimum && result.incomeMinimum > input.maxIncomeMinimum) return false;
   if (input.maxAnnualFee && result.annualFee > input.maxAnnualFee) return false;
   if (input.vipMinimum >= 10000 && result.vipAccess < 10000) return false;
   if (input.vipMinimum > 0 && input.vipMinimum < 10000 && result.vipAccess < input.vipMinimum) return false;
@@ -409,7 +399,7 @@ async function boot() {
 
 els.form.addEventListener("input", scheduleRecalculate);
 els.form.addEventListener("change", scheduleRecalculate);
-for (const input of [els.monthlySpend, els.income, els.investment, els.maxInvestmentMinimum, els.maxIncomeMinimum, els.maxAnnualFee]) {
+for (const input of [els.monthlySpend, els.income, els.investment, els.maxAnnualFee]) {
   input.addEventListener("input", () => {
     formatWhileTyping(input, 0);
   });

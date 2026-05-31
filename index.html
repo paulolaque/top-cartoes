@@ -86,28 +86,31 @@
                 <option value="eligible">Elegíveis</option>
               </select>
             </label>
-            <label>
-              <span>Investimento mínimo até</span>
-              <input id="maxInvestmentMinimum" class="currency-input" inputmode="decimal" type="text" placeholder="Sem limite" data-min="0" />
-              <small class="field-error" id="maxInvestmentMinimumError"></small>
+            <!-- filtros de investimento e renda removidos: agora calculados a partir de Investimento e Renda mensal -->
+            <label class="premium-only">
+              <span>Cartão</span>
+              <select id="cardFilter">
+                <option value="">Todos</option>
+              </select>
             </label>
-            <label>
-              <span>Renda mínima até</span>
-              <input id="maxIncomeMinimum" class="currency-input" inputmode="decimal" type="text" placeholder="Sem limite" data-min="0" />
-              <small class="field-error" id="maxIncomeMinimumError"></small>
+            <label class="premium-only">
+              <span>Elegibilidade</span>
+              <select id="eligibilityFilter">
+                <option value="eligible">Elegíveis</option>
+              </select>
             </label>
-            <label>
+            <label class="premium-only">
               <span>Anuidade até</span>
               <input id="maxAnnualFee" class="currency-input" inputmode="decimal" type="text" placeholder="Sem limite" data-min="0" />
               <small class="field-error" id="maxAnnualFeeError"></small>
             </label>
-            <label>
+            <label class="premium-only">
               <span>Banco</span>
               <select id="bankFilter">
                 <option value="">Todos</option>
               </select>
             </label>
-            <label>
+            <label class="premium-only">
               <span>Bandeira</span>
               <select id="brandFilter">
                 <option value="">Todas</option>
