@@ -3,10 +3,25 @@
 Esta pasta publica apenas a versao gratis e sanitizada:
 
 - `dist/free`
+- `docs/` (diretorio de deploy GitHub Pages)
 
 Ela nao contem nomes completos nem colunas premium.
 
-## Caminho mais simples
+## Uso recomendado para GitHub Pages
+
+1. No branch público (`dev` ou outro branch que voce escolher), mantenha a versão free no diretório `docs/`.
+2. Configure o Pages para usar:
+   - `Branch`: `dev` (ou branch público)
+   - `Folder`: `/docs`
+3. Para atualizar o site free, use o script:
+
+```bash
+./scripts/publish-free.sh
+```
+
+4. Commit e push de `docs/` no branch público.
+
+## Caminho mais simples (opcional)
 
 1. Crie um repositorio novo no GitHub, por exemplo `top-cartoes-free`.
 2. Abra PowerShell dentro de `C:\Users\paulo\OneDrive\Documents\New project\dist\free`.
