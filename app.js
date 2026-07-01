@@ -374,7 +374,8 @@ function renderPremiumHeaders() {
 }
 
 async function boot() {
-  const response = await fetch("./data/cards.json");
+  const dataPath = window.CARD_DATA_PATH || "./data/cards.json";
+  const response = await fetch(dataPath);
   if (!response.ok) throw new Error("Falha ao carregar base de cartões");
   const payload = await response.json();
   state.cards = payload.cards;

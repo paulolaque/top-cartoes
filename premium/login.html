@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login Premium | Top Cartões</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="workspace" aria-labelledby="login-title">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Top Cartões Premium</p>
+            <h1 id="login-title">Acesso exclusivo</h1>
+          </div>
+        </header>
+
+        <form id="loginForm" class="controls">
+          <fieldset>
+            <legend>Verifique sua assinatura Hotmart</legend>
+            <label>
+              <span>E-mail da compra</span>
+              <input id="email" type="email" autocomplete="email" placeholder="seu@email.com" required />
+              <small class="field-error" id="emailError"></small>
+            </label>
+            <label>
+              <span>Código de acesso (opcional)</span>
+              <input id="accessCode" type="text" autocomplete="off" placeholder="Ex: TOPPREMIUM2026" />
+              <small class="field-error" id="accessCodeError"></small>
+            </label>
+          </fieldset>
+
+          <button type="submit" class="switch" style="width: fit-content;">Validar acesso</button>
+          <p style="margin-top: 18px; color: var(--muted);">Seu e-mail será verificado no backend Hotmart se a assinatura estiver ativa.</p>
+        </form>
+      </section>
+    </main>
+
+    <script src="auth.js"></script>
+  </body>
+</html>
