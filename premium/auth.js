@@ -5,7 +5,7 @@ const allowedCodes = [
 ];
 const apiBase = window.HOTMART_API_BASE_URL || "";
 
-const els = {
+const authEls = {
   loginForm: document.getElementById("loginForm"),
   email: document.getElementById("email"),
   accessCode: document.getElementById("accessCode"),
@@ -35,14 +35,14 @@ function validateCode(code) {
 }
 
 function showError(message) {
-  if (els.accessCodeError) {
-    els.accessCodeError.textContent = message;
+  if (authEls.accessCodeError) {
+    authEls.accessCodeError.textContent = message;
   }
 }
 
 function clearErrors() {
-  if (els.emailError) els.emailError.textContent = "";
-  if (els.accessCodeError) els.accessCodeError.textContent = "";
+  if (authEls.emailError) authEls.emailError.textContent = "";
+  if (authEls.accessCodeError) authEls.accessCodeError.textContent = "";
 }
 
 function getApiUrl(path) {
@@ -74,11 +74,11 @@ async function handleLogin(event) {
   event.preventDefault();
   clearErrors();
 
-  const email = String(els.email.value || "").trim().toLowerCase();
-  const code = String(els.accessCode.value || "").trim();
+  const email = String(authEls.email.value || "").trim().toLowerCase();
+  const code = String(authEls.accessCode.value || "").trim();
 
   if (!validateEmail(email)) {
-    if (els.emailError) els.emailError.textContent = "Informe um e-mail válido.";
+    if (authEls.emailError) authEls.emailError.textContent = "Informe um e-mail válido.";
     return;
   }
 
@@ -111,8 +111,8 @@ function protectPage() {
   window.location.href = loginUrl.toString();
 }
 
-if (els.loginForm) {
-  els.loginForm.addEventListener("submit", handleLogin);
+if (authEls.loginForm) {
+  authEls.loginForm.addEventListener("submit", handleLogin);
 } else if (location.pathname.endsWith("app.html")) {
   protectPage();
 }
