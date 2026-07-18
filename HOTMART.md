@@ -163,10 +163,14 @@ cd /tmp/topcartoes-premium-repo
 # https://USUARIO.github.io/topcartoes-premium
 ```
 
-**Opção B:** Usar Vercel ou Netlify (mais simples)
+> Observação: repositórios privados não podem usar GitHub Pages sem um upgrade do GitHub. Se você não quer pagar pelo upgrade, use Vercel.
+
+**Opção B:** Usar Vercel ou Netlify (mais simples e recomendado para repositório privado)
 
 1. Conecte o repositório privado `topcartoes-premium` ao Vercel
 2. Ele será publicado em: `https://topcartoes-premium.vercel.app`
+
+> Vercel funciona bem com repositórios privados e é a melhor escolha para esse caso.
 
 #### 5. Linkagem no Hotmart
 
